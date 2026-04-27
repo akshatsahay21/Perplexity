@@ -1,7 +1,7 @@
 import "dotenv/config";
 import app from "./src/app.js";
 import connectToDb from "./src/config/database.js";
-import { testAi } from "./src/services/ai.service.js";
+
 
 const port = process.env.PORT || 8000;
 
@@ -14,4 +14,3 @@ connectToDb()
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-testAi();
