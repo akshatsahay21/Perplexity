@@ -1,9 +1,13 @@
 import "dotenv/config";
 import app from "./src/app.js";
+import http from "http";
 import connectToDb from "./src/config/database.js";
+import { initSocket } from "./src/sockets/server.socket.js";
 
 
 const port = process.env.PORT || 8000;
+
+const httpServer = http.createServer(app);
 
 connectToDb()
 .catch((err) => {
