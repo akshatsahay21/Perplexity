@@ -8,19 +8,19 @@ A full-stack AI search and chat application inspired by Perplexity. It combines 
 
 ### Dashboard
 
-![Dashboard home]
+
 <img width="1919" height="906" alt="Screenshot 2026-05-09 012820" src="https://github.com/user-attachments/assets/8a3c9638-3122-4fcc-8e06-e556900272ee" />
 
 
 ### AI Response View
 
-![AI response with saved chat history]
+
 <img width="1914" height="896" alt="Screenshot 2026-05-09 012845" src="https://github.com/user-attachments/assets/5db72adf-086e-4840-bf50-c3093e79ba93" />
 
 
 ### Demo Login
 
-![Login page with demo credentials]
+
 <img width="1887" height="889" alt="Screenshot 2026-05-09 012935" src="https://github.com/user-attachments/assets/ef1008d2-8201-4de0-ac90-350044c4956c" />
 
 
