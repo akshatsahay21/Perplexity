@@ -6,6 +6,7 @@ import morgan from "morgan";
 import cors from "cors";
 
 const app = express();
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 // Middleware
 app.use(express.json());
@@ -13,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 }));

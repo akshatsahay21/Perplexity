@@ -1,13 +1,20 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router'
+import { useSelector } from 'react-redux'
+import { useAuth } from '../hook/useAuth'
 
 const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const { handleRegister } = useAuth()
+  const loading = useSelector(state => state.auth.loading)
+  const error = useSelector(state => state.auth.error)
 
-  const submitForm = (event) => {
+  const submitForm = async (event) => {
     event.preventDefault()
+    setSuccessMessage('')
 
     const payload = {
       username,
@@ -15,7 +22,13 @@ const Register = () => {
       password,
     }
 
-    console.log('Register payload:', payload)
+    const data = await handleRegister(payload)
+    if (data?.success) {
+      setSuccessMessage(data.message || 'Registration successful. Please verify your email before logging in.')
+      setUsername('')
+      setEmail('')
+      setPassword('')
+    }
   }
 
   return (
@@ -28,6 +41,19 @@ const Register = () => {
           <p className="mt-2 text-sm text-zinc-300">
             Register with your username, email, and password.
           </p>
+          <p className="mt-4 rounded-lg border border-[#31b8c6]/30 bg-[#31b8c6]/10 px-4 py-3 text-sm text-zinc-200">
+            After registering, verify the link sent to your email. You can log in only after email verification is complete.
+          </p>
+          {successMessage && (
+            <p className="mt-4 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+              {successMessage}
+            </p>
+          )}
+          {error && (
+            <p className="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              {error}
+            </p>
+          )}
 
           <form onSubmit={submitForm} className="mt-8 space-y-5">
             <div>
@@ -77,9 +103,10 @@ const Register = () => {
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full rounded-lg bg-[#31b8c6] px-4 py-3 font-semibold text-zinc-950 transition hover:bg-[#45c7d4] focus:outline-none focus:shadow-[0_0_0_3px_rgba(49,184,198,0.35)]"
             >
-              Register
+              {loading ? 'Registering...' : 'Register'}
             </button>
           </form>
 

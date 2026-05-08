@@ -6,15 +6,23 @@ import { Navigate } from 'react-router'
 
 
 const Login = () => {
+    const demoEmail = 'akshatsahay353@gmail.com'
+    const demoPassword = '123456'
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
 
     const user = useSelector(state => state.auth.user)
     const loading = useSelector(state => state.auth.loading)
+    const error = useSelector(state => state.auth.error)
 
     const { handleLogin } = useAuth()
 
     const navigate = useNavigate()
+
+    const fillDemoCredentials = () => {
+        setEmail(demoEmail)
+        setPassword(demoPassword)
+    }
 
     const submitForm = async (event) => {
         event.preventDefault()
@@ -24,8 +32,10 @@ const Login = () => {
             password,
         }
 
-        await handleLogin(payload)
-        navigate("/")
+        const data = await handleLogin(payload)
+        if (data?.success) {
+            navigate("/")
+        }
 
     }
 
@@ -43,6 +53,32 @@ const Login = () => {
                     <p className="mt-2 text-sm text-zinc-300">
                         Sign in with your email and password.
                     </p>
+                    {error && (
+                        <p className="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                            {error}
+                        </p>
+                    )}
+
+                    <div className="mt-6 rounded-xl border border-[#31b8c6]/30 bg-[#31b8c6]/10 p-4 text-sm text-zinc-200">
+                        <div className="flex items-start justify-between gap-4">
+                            <div>
+                                <p className="font-semibold text-[#7ee3ec]">Demo login</p>
+                                <p className="mt-2 text-zinc-300">
+                                    Email: <span className="font-mono text-zinc-100">{demoEmail}</span>
+                                </p>
+                                <p className="mt-1 text-zinc-300">
+                                    Password: <span className="font-mono text-zinc-100">{demoPassword}</span>
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={fillDemoCredentials}
+                                className="shrink-0 rounded-lg border border-[#31b8c6]/50 px-3 py-2 text-xs font-semibold text-[#7ee3ec] transition hover:bg-[#31b8c6]/15"
+                            >
+                                Use
+                            </button>
+                        </div>
+                    </div>
 
                     <form onSubmit={submitForm} className="mt-8 space-y-5">
                         <div>
@@ -77,9 +113,10 @@ const Login = () => {
 
                         <button
                             type="submit"
+                            disabled={loading}
                             className="w-full rounded-lg bg-[#31b8c6] px-4 py-3 font-semibold text-zinc-950 transition hover:bg-[#45c7d4] focus:outline-none focus:shadow-[0_0_0_3px_rgba(49,184,198,0.35)]"
                         >
-                            Login
+                            {loading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
 

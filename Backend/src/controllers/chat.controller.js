@@ -15,20 +15,31 @@ export async function sendMessage(req, res) {
             user: req.user.id,
             title
         })
+    } else {
+        chat = await chatModel.findOne({
+            _id: chatId,
+            user: req.user.id
+        })
+
+        if (!chat) {
+            return res.status(404).json({
+                message: "Chat not found"
+            })
+        }
     }
 
     const userMessage = await messageModel.create({
-        chat: chatId || chat._id,
+        chat: chat._id,
         content: message,
         role: "user"
     })
 
-    const messages = await messageModel.find({ chat: chatId || chat._id })
+    const messages = await messageModel.find({ chat: chat._id })
 
     const result = await generateResponse(messages);
 
     const aiMessage = await messageModel.create({
-        chat: chatId || chat._id,
+        chat: chat._id,
         content: result,
         role: "ai"
     })
@@ -86,15 +97,15 @@ export async function deleteChat(req, res) {
         user: req.user.id
     })
 
-    await messageModel.deleteMany({
-        chat: chatId
-    })
-
     if (!chat) {
         return res.status(404).json({
             message: "Chat not found"
         })
     }
+
+    await messageModel.deleteMany({
+        chat: chatId
+    })
 
     res.status(200).json({
         message: "Chat deleted successfully"

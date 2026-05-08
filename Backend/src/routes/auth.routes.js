@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getMe, register } from "../controllers/auth.controller.js";
+import { getMe, logout, register } from "../controllers/auth.controller.js";
 import { registerValidator } from "../validators/auth.validator.js";
 import { verifyEmail } from "../controllers/auth.controller.js";
 import { loginValidator } from "../validators/auth.validator.js";
@@ -24,6 +24,13 @@ authRouter.post("/register", registerValidator, register);
  * @body { email, password }
  */
 authRouter.post("/login", loginValidator, login);
+
+/**
+ * @route POST /api/auth/logout
+ * @desc Logout user and clear JWT cookie
+ * @access Public
+ */
+authRouter.post("/logout", logout);
 
 /**
  * @route GET /api/auth/get-me

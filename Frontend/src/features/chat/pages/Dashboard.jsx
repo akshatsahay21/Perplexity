@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import { useSelector, useDispatch } from 'react-redux'
 import { useChat } from '../hooks/useChat'
 import remarkGfm from 'remark-gfm'
-import { setUser } from '../../auth/auth.slice'
+import { useAuth } from '../../auth/hook/useAuth'
 import { setChats, setCurrentChatId } from '../chat.slice'
 
 // ─── Theme Context ────────────────────────────────────────────────────────────
@@ -1027,6 +1027,7 @@ const SUGGESTIONS = [
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 const DashboardInner = () => {
   const chat = useChat()
+  const auth = useAuth()
   const dispatch = useDispatch()
   const [chatInput, setChatInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -1110,25 +1111,20 @@ const DashboardInner = () => {
     setDeleteConfirm(chatId)
   }
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (!deleteConfirm) return
-    const updatedChats = { ...chats }
-    delete updatedChats[deleteConfirm]
-    dispatch(setChats(updatedChats))
-    if (currentChatId === deleteConfirm) {
-      dispatch(setCurrentChatId(null))
+    const data = await chat.handleDeleteChat(deleteConfirm, chats, currentChatId)
+    if (data) {
+      setDeleteConfirm(null)
     }
-    setDeleteConfirm(null)
   }
 
   // ── Logout ──
-  const handleLogout = () => {
-    // Clear token from localStorage/cookies
+  const handleLogout = async () => {
+    await auth.handleLogout()
     localStorage.removeItem('token')
-    localStorage.removeItem('perplexity-theme')
-    // Clear Redux auth state
-    dispatch(setUser(null))
-    // Redirect to login
+    dispatch(setChats({}))
+    dispatch(setCurrentChatId(null))
     window.location.href = '/login'
   }
 
@@ -1327,7 +1323,7 @@ const DashboardInner = () => {
                               ul: ({ children }) => <ul>{children}</ul>,
                               ol: ({ children }) => <ol>{children}</ol>,
                               li: ({ children }) => <li>{children}</li>,
-                              code: ({ inline, children }) => <code>{children}</code>,
+                              code: ({ children }) => <code>{children}</code>,
                               pre: ({ children }) => <pre>{children}</pre>,
                               h1: ({ children }) => <h1>{children}</h1>,
                               h2: ({ children }) => <h2>{children}</h2>,
