@@ -1,20 +1,22 @@
 import "dotenv/config";
 import app from "./src/app.js";
 import http from "http";
-import connectToDb from "./src/config/database.js";
+import connectDB from "./src/config/database.js";
 import { initSocket } from "./src/sockets/server.socket.js";
 
+const PORT = process.env.PORT || 8000;
 
-const port = process.env.PORT || 8000;
 
 const httpServer = http.createServer(app);
 
-connectToDb()
-.catch((err) => {
-    console.error("Failed to connect to the database", err);
-    process.exit(1);
-});
+initSocket(httpServer);
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+connectDB()
+    .catch((err) => {
+        console.error("MongoDB connection failed:", err);
+        process.exit(1);
+    });
+
+httpServer.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
