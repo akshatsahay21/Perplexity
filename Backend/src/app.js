@@ -6,7 +6,17 @@ import morgan from "morgan";
 import cors from "cors";
 
 const app = express();
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const defaultAllowedOrigins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+];
+
+const envAllowedOrigins = (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || "")
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+
+const allowedOrigins = [ ...new Set([ ...defaultAllowedOrigins, ...envAllowedOrigins ]) ];
 
 // Middleware
 app.use(express.json());
@@ -14,7 +24,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(cors({
-    origin: FRONTEND_URL,
+    origin: (origin, callback) => {
+        // Allow non-browser requests (no origin header)
+        if (!origin) return callback(null, true);
+
+        const normalizedOrigin = origin.replace(/\/$/, "");
+        const isVercelDomain = /^https:\/\/.*\.vercel\.app$/i.test(normalizedOrigin);
+        const isAllowed = allowedOrigins.includes(normalizedOrigin) || isVercelDomain;
+
+        if (isAllowed) return callback(null, true);
+
+        return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 }));
