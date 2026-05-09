@@ -40,7 +40,7 @@ export async function register(req, res) {
         email: user.email,
     }, process.env.JWT_SECRET)
 
-    await sendEmail({
+    sendEmail({
         to: email,
         subject: "Welcome to Perplexity!",
         html: `
@@ -51,10 +51,12 @@ export async function register(req, res) {
                 <p>If you did not create an account, please ignore this email.</p>
                 <p>Best regards,<br>The Perplexity Team</p>
         `
-    })
+    }).catch((err) => {
+        console.error("Failed to send verification email:", err.message);
+    });
 
     res.status(201).json({
-        message: "User registered successfully",
+        message: "User registered successfully. Check your inbox for the verification email.",
         success: true,
         user: {
             id: user._id,
