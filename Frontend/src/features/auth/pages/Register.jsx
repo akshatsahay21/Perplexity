@@ -7,9 +7,9 @@ const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const { handleRegister } = useAuth()
-  const loading = useSelector(state => state.auth.loading)
   const error = useSelector(state => state.auth.error)
 
   const submitForm = async (event) => {
@@ -22,20 +22,25 @@ const Register = () => {
       password,
     }
 
-    const data = await handleRegister(payload)
-    if (data?.success) {
-      setSuccessMessage(data.message || 'Registration successful. Please verify your email before logging in.')
-      setUsername('')
-      setEmail('')
-      setPassword('')
+    setIsSubmitting(true)
+    try {
+      const data = await handleRegister(payload)
+      if (data?.success) {
+        setSuccessMessage(data.message || 'Registration successful. Please verify your email before logging in.')
+        setUsername('')
+        setEmail('')
+        setPassword('')
+      }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
-    <section className="min-h-screen bg-zinc-950 px-4 py-10 text-zinc-100 sm:px-6 lg:px-8">
-      <div className="mx-auto flex min-h-[85vh] w-full max-w-5xl items-center justify-center">
-        <div className="w-full max-w-md rounded-2xl border border-[#31b8c6]/40 bg-zinc-900/70 p-8 shadow-2xl shadow-black/50 backdrop-blur">
-          <h1 className="text-3xl font-bold text-[#31b8c6]">
+    <section className="min-h-screen min-h-dvh w-full overflow-x-hidden bg-zinc-950 px-4 py-6 text-zinc-100 sm:px-6 sm:py-10 lg:px-8">
+      <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-5xl items-center justify-center sm:min-h-[85vh]">
+        <div className="auth-card rounded-2xl border border-[#31b8c6]/40 bg-zinc-900/70 p-5 shadow-2xl shadow-black/50 backdrop-blur sm:p-8">
+          <h1 className="text-2xl font-bold text-[#31b8c6] sm:text-3xl">
             Create Account
           </h1>
           <p className="mt-2 text-sm text-zinc-300">
@@ -55,7 +60,7 @@ const Register = () => {
             </p>
           )}
 
-          <form onSubmit={submitForm} className="mt-8 space-y-5">
+          <form onSubmit={submitForm} className="mt-6 space-y-4 sm:mt-8 sm:space-y-5">
             <div>
               <label htmlFor="username" className="mb-2 block text-sm font-medium text-zinc-200">
                 Username
@@ -103,10 +108,10 @@ const Register = () => {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
               className="w-full rounded-lg bg-[#31b8c6] px-4 py-3 font-semibold text-zinc-950 transition hover:bg-[#45c7d4] focus:outline-none focus:shadow-[0_0_0_3px_rgba(49,184,198,0.35)]"
             >
-              {loading ? 'Registering...' : 'Register'}
+              {isSubmitting ? 'Registering...' : 'Register'}
             </button>
           </form>
 

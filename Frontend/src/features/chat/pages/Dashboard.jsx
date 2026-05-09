@@ -195,6 +195,7 @@ const globalStyle = `
   .plex-root {
     display: flex;
     height: 100vh;
+    min-width: 0;
     background: var(--bg-root);
     overflow: hidden;
     transition: background var(--transition);
@@ -242,9 +243,13 @@ const globalStyle = `
   }
 
   @media (max-width: 768px) {
+    .plex-root { height: 100dvh; }
     .sidebar {
       position: fixed;
       left: 0; top: 0; bottom: 0;
+      width: min(86vw, 320px);
+      min-width: 0;
+      max-width: 320px;
       transform: translateX(-100%);
     }
     .sidebar.open { transform: translateX(0); }
@@ -587,6 +592,7 @@ const globalStyle = `
   /* ── Main area ── */
   .main {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -640,6 +646,7 @@ const globalStyle = `
     flex: 1;
     overflow-y: auto;
     padding: 0 0 120px;
+    min-width: 0;
   }
 
   .messages-inner {
@@ -668,6 +675,8 @@ const globalStyle = `
     font-size: 14.5px;
     line-height: 1.65;
     color: var(--text-primary);
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .message-bubble.user {
@@ -716,12 +725,14 @@ const globalStyle = `
   .markdown-body p:last-child { margin-bottom: 0; }
   .markdown-body ul, .markdown-body ol { margin-bottom: 10px; padding-left: 20px; }
   .markdown-body li { margin-bottom: 4px; }
+  .markdown-body { overflow-wrap: anywhere; }
   .markdown-body code {
     font-family: var(--font-mono);
     font-size: 12.5px;
     background: var(--bg-code);
     padding: 2px 6px;
     border-radius: 5px;
+    word-break: break-word;
   }
   .markdown-body pre {
     background: var(--bg-code);
@@ -784,9 +795,10 @@ const globalStyle = `
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 20px 20px 170px;
     text-align: center;
     animation: fadeUp 0.5s ease;
+    min-width: 0;
   }
 
   .home-logo-wrap {
@@ -813,13 +825,13 @@ const globalStyle = `
   }
 
   .home-title {
-    font-size: clamp(32px, 6vw, 52px);
+    font-size: 52px;
     font-weight: 700;
     background: var(--logo-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    letter-spacing: -1px;
+    letter-spacing: 0;
     line-height: 1.1;
     margin-bottom: 12px;
   }
@@ -837,6 +849,7 @@ const globalStyle = `
     gap: 10px;
     justify-content: center;
     max-width: 600px;
+    width: 100%;
   }
 
   .suggestion-chip {
@@ -853,6 +866,7 @@ const globalStyle = `
     cursor: pointer;
     transition: all var(--transition);
     white-space: nowrap;
+    max-width: 100%;
   }
 
   .suggestion-chip:hover {
@@ -871,6 +885,7 @@ const globalStyle = `
     right: 0;
     padding: 16px 20px 20px;
     background: linear-gradient(to top, var(--bg-main) 75%, transparent);
+    z-index: 5;
   }
 
   .input-container {
@@ -882,6 +897,7 @@ const globalStyle = `
     padding: 14px 16px;
     box-shadow: var(--shadow-md);
     transition: border-color var(--transition), box-shadow var(--transition);
+    width: 100%;
   }
 
   .input-container:focus-within {
@@ -1012,6 +1028,206 @@ const globalStyle = `
     border: 1px solid var(--danger);
   }
   .delete-confirm-btn.confirm:hover { background: var(--danger); color: white; }
+
+  @media (max-width: 1024px) {
+    .sidebar {
+      width: 240px;
+      min-width: 240px;
+    }
+
+    .messages-inner,
+    .input-container,
+    .input-footer-note {
+      max-width: 680px;
+    }
+
+    .home-title { font-size: 46px; }
+    .home-subtitle { margin-bottom: 28px; }
+  }
+
+  @media (max-width: 768px) {
+    .main { height: 100dvh; }
+
+    .sidebar {
+      width: min(86vw, 320px);
+      min-width: 0;
+      max-width: 320px;
+    }
+
+    .topbar {
+      display: flex;
+      min-height: 60px;
+      padding: 10px 14px;
+    }
+
+    .messages-area {
+      padding-bottom: 150px;
+    }
+
+    .messages-inner {
+      padding: 18px 16px;
+      gap: 4px;
+    }
+
+    .message-bubble {
+      padding: 10px 12px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .message-bubble.user {
+      max-width: 92%;
+    }
+
+    .message-bubble.ai {
+      padding: 12px 0;
+    }
+
+    .markdown-body pre {
+      padding: 12px;
+      max-width: 100%;
+    }
+
+    .markdown-body table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .home-screen {
+      justify-content: flex-start;
+      padding: 34px 16px 180px;
+      overflow-y: auto;
+    }
+
+    .home-logo-wrap { margin-bottom: 18px; }
+
+    .home-logo-bg {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+    }
+
+    .home-title {
+      font-size: 42px;
+      line-height: 1.05;
+    }
+
+    .home-subtitle {
+      font-size: 14px;
+      max-width: 340px;
+      margin-bottom: 22px;
+    }
+
+    .home-suggestions {
+      max-width: 440px;
+      gap: 8px;
+    }
+
+    .suggestion-chip {
+      font-size: 12.5px;
+      padding: 8px 12px;
+      white-space: normal;
+      text-align: left;
+    }
+
+    .input-wrapper {
+      padding: 12px 14px 14px;
+      background: linear-gradient(to top, var(--bg-main) 86%, transparent);
+    }
+
+    .input-container {
+      border-radius: 22px;
+      padding: 12px;
+    }
+
+    .input-textarea {
+      font-size: 14px;
+      max-height: 120px;
+    }
+
+    .input-actions { margin-top: 10px; }
+    .input-hint { font-size: 11px; }
+
+    .btn-send {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+    }
+
+    .input-footer-note {
+      padding: 0 10px;
+      font-size: 10.5px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .sidebar {
+      width: min(92vw, 320px);
+      min-width: 0;
+    }
+
+    .topbar-logo { font-size: 15px; }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+    }
+
+    .home-screen {
+      padding: 26px 12px 170px;
+    }
+
+    .home-logo-bg {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+    }
+
+    .home-title { font-size: 34px; }
+
+    .home-subtitle {
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .home-suggestions {
+      flex-direction: column;
+      align-items: stretch;
+      max-width: 100%;
+    }
+
+    .suggestion-chip {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .messages-inner { padding: 14px 12px; }
+    .message-bubble.user { max-width: 96%; }
+
+    .input-wrapper {
+      padding: 10px 10px 12px;
+    }
+
+    .input-container {
+      border-radius: 18px;
+      padding: 11px;
+    }
+
+    .input-hint { display: none; }
+    .input-footer-note { display: none; }
+
+    .delete-confirm {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      transform: none;
+      justify-content: center;
+      flex-wrap: wrap;
+      white-space: normal;
+      padding: 12px;
+    }
+  }
 `
 
 // ─── Suggestion chips data ─────────────────────────────────────────────────
@@ -1193,7 +1409,7 @@ const DashboardInner = () => {
                     className="chat-history-item"
                   >
                     <span className="icon"><IconChat /></span>
-                    <span>{c.title || 'Untitled Chat'}</span>
+                    <span>{(c.title || 'Untitled Chat').replace(/\*+|"+/g, '').trim()}</span>
                   </button>
                   <button
                     className="btn-delete-chat"

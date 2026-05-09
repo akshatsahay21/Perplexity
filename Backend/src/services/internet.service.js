@@ -6,9 +6,11 @@ const tavily = Tavily({
 
 
 export const searchInternet = async ({ query }) => {
-    const results = await tavily.search(query, {
-        maxResults: 5,
-    })
+  const results = await tavily.search(query, {
+    maxResults: 5,
+    days: 7,
+    topic: "general",
+})
 
     console.log(JSON.stringify(results))
 
