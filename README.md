@@ -3,6 +3,8 @@
 A full-stack AI search and chat application inspired by Perplexity. It combines authentication, persistent conversations, AI-generated responses, internet search, and a polished chat interface into one MERN-style project.
 
 > This is an independent learning project and is not affiliated with Perplexity.
+> LIVE LINK -
+> https://perplexity-pied.vercel.app/login
 
 ## Screenshots
 
