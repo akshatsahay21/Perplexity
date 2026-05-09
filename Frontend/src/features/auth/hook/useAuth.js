@@ -27,6 +27,9 @@ export function useAuth() {
             dispatch(setLoading(true))
             dispatch(setError(null))
             const data = await login({ email, password })
+            if (data?.token) {
+                localStorage.setItem("token", data.token)
+            }
             dispatch(setUser(data.user))
             return data
         } catch (err) {
@@ -45,6 +48,9 @@ export function useAuth() {
             dispatch(setUser(data.user))
             return data
         } catch (err) {
+            if (err.response?.status === 401) {
+                localStorage.removeItem("token")
+            }
             dispatch(setError(err.response?.status === 401 ? null : err.response?.data?.message || "Failed to fetch user data"))
             dispatch(setUser(null))
             return null
@@ -62,6 +68,7 @@ export function useAuth() {
             dispatch(setError(err.response?.data?.message || "Logout failed"))
             return null
         } finally {
+            localStorage.removeItem("token")
             dispatch(setUser(null))
             dispatch(setLoading(false))
         }
